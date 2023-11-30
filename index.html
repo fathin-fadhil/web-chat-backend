@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html>
+<head>
+ <! — include bootstap and jquery cdn →
+ 
+</head>
+<body>
+<div class="container">
+ <br>
+ <div class="jumbotron">
+ <h1 class="display-4">Send Message</h1>
+ <br>
+ <input value="62a7095f1ad116df376fa490" id ="room_id" class="form-control" placeholder="room">
+ <br>
+ <input id ="user_name" class="form-control" placeholder="room">
+ <br>
+ <textarea id = "message" class="form-control" placeholder="Your Message Here">
+</textarea>
+ <br>
+ <button id="send" class="btn btn-success">Send</button>
+ </div>
+ <ul id="messages">
+ 
+ </ul>
+</div>
+<script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+<script src="https://cdn.socket.io/4.4.1/socket.io.js"></script>
+
+<script>
+
+
+
+
+window.onload = function() {
+
+
+    $(() => {
+
+      const socket = io('http://localhost:8080',{     // note changed URL here
+      query:{
+        "room_id" : "655d8874914a420cc0bb3c2e"
+      }
+  });
+
+    $("#send").click((e)=>{
+      e.preventDefault();
+       sendMessage({
+          room_id:$("#room_id").val(),
+          user_name:$("#user_name").val(),
+          message:$("#message").val(),
+        //   user_name:$("#room_id").val(),
+        //   user_id:$("#message").val()
+        }
+      );
+
+     
+        // var message=$("#message").val();
+  });
+
+// function getMessages(){
+//   $.get('http://localhost:8080/api/v1/room/'+id, (data) => {
+//     //  for(const i in data){
+//       // $("#messages").append(`
+//       //   <p>  ${data} </p>`)
+//       // console.log(data.messages);
+//       // }
+//       // console.log(id);
+//     })
+//   }
+  
+  function sendMessage(data){
+
+    $.post('http://localhost:8080/api/v1/message', data)
+
+    // $('div#messages').html("");
+    
+  }
+  socket.on('new_message', function(data){
+    $('ul#messages').append('<li>'+data+'</li>');
+      });
+    });
+  }
+        // getMessages()
+    
+
+        
+    // function addMessages(message){
+    // $("#messages").append(`
+    //     <h4> ${message.user_name} </h4>
+    //     <p>  ${message.user_id} </p>
+    //     <h4> ${message.room_id} </h4>
+    //     <p>  ${message.message} </p>
+        
+    //     `)
+
+    // }
+//   $("#send").click(() => {
+//     const message = {
+//       name: $("#name").val(),
+//       message: $("#message").val()
+//     }
+//     postMessage(message);
+// });
+
+
+</script>
+</body>
+</html>

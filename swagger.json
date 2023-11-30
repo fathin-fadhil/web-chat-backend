@@ -1,0 +1,93 @@
+{
+    "swagger": "2.0",
+    "info": {
+        "version": "1.0.0",
+        "title": "API Chat App",
+        "description": "support the needs and knowledge of API with a beautiful appearance", 
+        "license": {
+            "name": "MIT"
+        }
+    },  
+    "schemes": [
+        "http"
+    ],
+    "consumes": [
+        "application/json"
+    ],
+    "produces": [
+        "application/json"
+    ],
+    "paths": {
+        "/api/v1/room": { 
+            "get": {
+                "responses": {}
+            },
+            "post": { 
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [{
+                    "name": "room",
+                    "in": "body",
+                    "description": "Room to add to the store",
+                    "required": true,
+                    "schema": {
+                        "$ref": "#/definitions/NewRoom"
+                    }
+                }],
+                "responses": {}
+            }
+        },
+        "/api/v1/room/{id}": {
+            "get": { 
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [{
+                    "name": "id",
+                    "in": "path",
+                    "description": "ID of room to fetch",
+                    "required": true,
+                    "type": "string"
+                }],
+                "responses": {}
+            },
+            "delete": {
+                "description": "deletes a single pet based on the ID supplied",
+                "operationId": "deletePet",
+                "parameters": [{
+                    "name": "id",
+                    "in": "path",
+                    "description": "ID of pet to delete",
+                    "required": true,
+                    "type": "integer",
+                    "format": "int64"
+                }],
+                "responses": {
+                    "204": {
+                        "description": "pet deleted"
+                    },
+                    "default": {
+                        "description": "unexpected error",
+                        "schema": {
+                            "$ref": "#/definitions/ErrorModel"
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "definitions": { 
+        "NewRoom": {
+            "type": "object",
+            "required": [
+                "name"
+            ],
+            "properties": {
+                "name": {
+                    "type": "string"
+                }
+            }
+        }
+    }
+}
