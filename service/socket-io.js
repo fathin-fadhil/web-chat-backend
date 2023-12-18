@@ -20,11 +20,12 @@ exports.socketConnection = (server) => {
         console.info(`Client connected [id=${socket.id}]`);
         const { room_id, username, public_key } = socket.request._query;
 
-        await db.rooms.findByIdAndUpdate(room_id, {joinedUser: [{
-            socket_id: socket.id,
-            username: username,
-            public_key: public_key
-        }]})
+        await db.rooms.findByIdAndUpdate(room_id, {$set: {
+            [`joinedUser.${socket.id}`]: {
+                username: username,
+                public_key: public_key
+            }
+        }})
 
         socket.join(room_id);
 
@@ -38,7 +39,7 @@ exports.socketConnection = (server) => {
             console.info(`Client disconnected [id=${socket.id}]`);
             await db.rooms.updateOne(
                 { _id: room_id },
-                { $pull: {joinedUser: {socket_id: socket.id}} }
+                { $unset: { [`joinedUser.${socket.id}`]: 1 } }
             )
 
             io.to(room_id).emit('user_left', {
