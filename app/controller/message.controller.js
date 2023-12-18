@@ -7,28 +7,19 @@ const Message = db.messages;
 
 const insert = async (req, res) => {
     try { 
-        console.log(req.body);
         Room.findById(req.body.room_id)
             .then(async data => {
                 if(data){
-                    const message = new Message({
+/*                     const message = new Message({
                         room_id: req.body.room_id, 
                         user_name: req.body.user_name, 
-                        // user_id: req.body.user_id, 
                         message: req.body.message,  
                     }); 
-                    
-                    //message.save(message)
-                    const messageData = await message.save()
-                    
-                    //socket.sendMessage(req.body.room_id, 'new_message',[req.body.user_name,req.body.message])
-                    socket.sendMessage(req.body.room_id, 'new_message', {messageData})
-            
-                    res.status(200).json({
-                        message: "OK",
-                        //data: message
-                        data: messageData
-                    })
+                    const messageData = await message.save() */            
+
+                    // socket.sendMessage(req.body.room_id, 'new_message', {messageData})
+                    socket.sendEncryptedMessage(req.body.room_id, req.body)
+                    res.status(200).json({ message: "OK" })
                 }else{
                     res.status(400).json({
                         message: "Room not found!", 

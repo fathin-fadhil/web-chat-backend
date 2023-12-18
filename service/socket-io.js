@@ -21,7 +21,7 @@ exports.socketConnection = (server) => {
         const { room_id, username, public_key } = socket.request._query;
 
         socket.join(room_id);
-        
+
         await db.rooms.findByIdAndUpdate(room_id, {$set: {
             [`joinedUser.${username}`]: {
                 socket_id: socket.id,
@@ -54,5 +54,20 @@ exports.socketConnection = (server) => {
 };
 
 exports.sendMessage = (roomId, key, message) => io.to(roomId).emit(key, message);
+
+exports.sendEncryptedMessage = function (roomId, rawMessageData) {
+//    console.log("🚀 ~ file: socket-io.js:60 ~ messageDataToBeSent:", rawMessageData)    
+
+    for (const socketId in rawMessageData.messageData.encryptedKeys) {        
+        io.to(socketId).emit('new_message', {
+            id: rawMessageData.id,
+            createdAt: rawMessageData.createdAt,            
+            user_name: rawMessageData.user_name,
+            room_id: roomId,
+            encryptedMessageData: rawMessageData.messageData.encryptedMessageData,
+            encryptedKey: rawMessageData.messageData.encryptedKeys[socketId].encryptedKey,
+        })
+    }
+}
 
 exports.getRooms = () => io.sockets.adapter.rooms;
