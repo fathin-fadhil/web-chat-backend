@@ -70,4 +70,10 @@ exports.sendEncryptedMessage = function (roomId, rawMessageData) {
     }
 }
 
+exports.deleteMessageBroadcast = function (roomId, messageId) {
+    io.to(roomId).emit('delete_message', {
+        messageId: messageId
+    })
+}
+
 exports.getRooms = () => io.sockets.adapter.rooms;

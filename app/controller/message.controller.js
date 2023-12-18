@@ -40,8 +40,13 @@ const insert = async (req, res) => {
     }
 } 
 
+/**
+ * 
+ * @param {Express.Request} req 
+ * @param {Express.Response} res 
+ */
 const destroy = async (req, res) => {
-    Message.findByIdAndUpdate(req.params.id, {
+/*     Message.findByIdAndUpdate(req.params.id, {
             deletedAt: Date.now()
         })
         .then(data => {
@@ -54,7 +59,8 @@ const destroy = async (req, res) => {
             res.status(500).send({
                 message: err.message || "Internal Server Error!"
             });
-        })
+        }) */
+    socket.deleteMessageBroadcast(req.query.room_id, req.params.id)
 } 
 
 module.exports = { 
