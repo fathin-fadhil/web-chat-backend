@@ -9,7 +9,8 @@ module.exports = mongoose => {
             deletedAt: Date,
         },
         { 
-            timestamps: true 
+            timestamps: true,
+            minimize: false
         }
     );
 

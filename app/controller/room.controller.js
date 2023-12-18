@@ -21,13 +21,15 @@ const insert = async (req, res) => {
     try { 
         const room = new Room({
             name: req.body.name, 
+            joinedUser: {}
         }); 
     
-        room.save(room) 
+        //room.save(room) 
+        const roomData = await room.save()
 
         res.status(200).json({
             message: "OK",
-            data: room
+            data: roomData
         })
     } catch (error) {
         console.error(error);
