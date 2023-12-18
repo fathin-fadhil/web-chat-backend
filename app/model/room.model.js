@@ -5,6 +5,7 @@ module.exports = mongoose => {
         {
             uuid: String,
             name: String, 
+            joinedUser: Array,
             deletedAt: Date,
         },
         { 

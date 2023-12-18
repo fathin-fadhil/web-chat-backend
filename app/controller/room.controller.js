@@ -41,22 +41,10 @@ const show = async (req, res) => {
     Room.findById(req.params.id)
         .then(room_data => {
             if(room_data){
-                Message.find({ room_id: room_data.id, deletedAt: null })
-                    .then(message_data => {
-                        room_data = room_data.toJSON();
-
-                        room_data.messages = message_data
-                        
-                        res.status(200).send({
-                            message: 'OK',
-                            data: room_data
-                        });
-                    })
-                    .catch(err => {
-                        res.status(500).send({
-                            message: err.message || "Internal Server Error!"
-                        });
-                    }) 
+                res.status(200).send({
+                    message: 'OK',
+                    data: room_data
+                });
             }else{
                 res.status(200).send({
                     message: 'OK',

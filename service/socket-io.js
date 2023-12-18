@@ -1,3 +1,5 @@
+const db = require("../app/model/index")
+
 let io;
 
 exports.socketConnection = (server) => {
@@ -14,13 +16,24 @@ exports.socketConnection = (server) => {
 
  
 
-    io.on('connection', (socket) => {
+    io.on('connection', async (socket) => {
         console.info(`Client connected [id=${socket.id}]`);
+        const { room_id, username, public_key } = socket.request._query;
+
+        await db.rooms.findByIdAndUpdate(room_id, {joinedUser: [{
+            socket_id: socket.id,
+            username: username,
+            public_key: public_key
+        }]})
         
-        socket.join(socket.request._query.room_id);
+        socket.join(room_id);
                      
-        socket.on('disconnect', () => {
+        socket.on('disconnect', async () => {
             console.info(`Client disconnected [id=${socket.id}]`);
+            await db.rooms.updateOne(
+                { _id: room_id },
+                { $pull: {joinedUser: {socket_id: socket.id}} }
+            )
         });
     });
 };
