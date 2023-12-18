@@ -25,15 +25,27 @@ exports.socketConnection = (server) => {
             username: username,
             public_key: public_key
         }]})
-        
+
         socket.join(room_id);
-                     
+
+        io.to(room_id).emit('user_joined', {
+            socket_id: socket.id,
+            username: username,
+            public_key: public_key
+        })
+        
         socket.on('disconnect', async () => {
             console.info(`Client disconnected [id=${socket.id}]`);
             await db.rooms.updateOne(
                 { _id: room_id },
                 { $pull: {joinedUser: {socket_id: socket.id}} }
             )
+
+            io.to(room_id).emit('user_left', {
+                socket_id: socket.id,
+                username: username,
+                public_key: public_key
+            })
         });
     });
 };
